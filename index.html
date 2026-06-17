@@ -12,9 +12,9 @@
         
         body {
             font-family: 'Mali', cursive;
-            touch-action: none; /* ป้องกัน Pull-to-refresh บนมือถือ */
+            touch-action: none;
             overflow: hidden;
-            background-color: #bae6fd; /* bg-sky-200 */
+            background-color: #bae6fd;
         }
 
         /* สไตล์เยลลี่ 3D และ Animation */
@@ -49,7 +49,6 @@
         }
         .anim-bounce { animation: float-bounce 2s infinite ease-in-out; }
 
-        /* Confetti */
         .confetti {
             position: absolute;
             z-index: 100;
@@ -97,7 +96,7 @@
         <div id="screen-game" class="hidden w-full h-full flex-col max-h-[100vh]">
             <div class="flex justify-between items-center w-full p-6 pt-8">
                 <div class="bg-white/90 border-4 border-white rounded-full px-6 py-2 shadow-md text-2xl font-bold text-sky-600">
-                    ข้อที่: <span id="text-progress">1/5</span>
+                    ข้อที่: <span id="text-progress">1/10</span>
                 </div>
                 <div class="bg-white/90 border-4 border-white rounded-full px-6 py-2 shadow-md text-2xl font-bold text-pink-600">
                     คะแนน: <span id="text-score">0</span>
@@ -110,9 +109,8 @@
                     Option 1
                 </button>
 
-                <div id="fruit-target" class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[120px] md:text-[200px] drop-shadow-[0_15px_15px_rgba(0,0,0,0.4)] anim-bounce z-10 pointer-events-none">
-                    🍎
-                </div>
+                <div id="fruit-target" class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[180px] h-[180px] md:w-[280px] md:h-[280px] anim-bounce z-10 pointer-events-none drop-shadow-[0_15px_15px_rgba(0,0,0,0.4)] flex justify-center items-center bg-white/50 rounded-full border-4 border-white backdrop-blur-sm p-4">
+                    </div>
 
                 <button id="btn-opt-right" class="hand-interact pointer-events-auto jelly-btn bg-sky-400 text-white font-bold text-3xl md:text-5xl py-4 px-6 md:px-10 max-w-[35%] break-words z-20">
                     Option 2
@@ -135,25 +133,33 @@
 
     <script>
         // ==========================================
-        // 1. Data Source & State
+        // 1. Data Source (เปลี่ยนจากการใช้ icon เป็นลิงก์รูปภาพ imageUrl)
         // ==========================================
         const fruitPool = [
-            { name: 'Apple', icon: '🍎' }, { name: 'Banana', icon: '🍌' }, { name: 'Orange', icon: '🍊' },
-            { name: 'Grape', icon: '🍇' }, { name: 'Strawberry', icon: '🍓' }, { name: 'Watermelon', icon: '🍉' },
-            { name: 'Pineapple', icon: '🍍' }, { name: 'Mango', icon: '🥭' }, { name: 'Cherry', icon: '🍒' },
-            { name: 'Peach', icon: '🍑' }, { name: 'Pear', icon: '🍐' }, { name: 'Kiwi', icon: '🥝' },
-            { name: 'Lemon', icon: '🍋' }, { name: 'Coconut', icon: '🥥' },
-            { name: 'Avocado', icon: '🥑' }, { name: 'Melon', icon: '🍈' }, { name: 'Green Apple', icon: '🍏' },
-            { name: 'Tomato', icon: '🍅' }, { name: 'Papaya', icon: '🥭' },
-            { name: 'Plum', icon: '🍑' }, { name: 'Pomegranate', icon: '🍎' }, { name: 'Lychee', icon: '🍒' },
-            { name: 'Raspberry', icon: '🍇' }, { name: 'Dragon Fruit', icon: '🐲' }, { name: 'Starfruit', icon: '⭐' },
-            { name: 'Guava', icon: '🍐' }, { name: 'Tangerine', icon: '🍊' } 
+            // ตัวอย่างการใส่ลิงก์รูปภาพ (แทนที่ลิงก์ placehold ด้วยลิงก์ Google Drive ของคุณได้เลย)
+            { name: 'Apple', imageUrl: 'https://placehold.co/400x400/ffcccc/dc2626?text=Apple' }, 
+            { name: 'Banana', imageUrl: 'https://placehold.co/400x400/fef08a/ca8a04?text=Banana' }, 
+            { name: 'Orange', imageUrl: 'https://placehold.co/400x400/fed7aa/ea580c?text=Orange' },
+            { name: 'Grape', imageUrl: 'https://placehold.co/400x400/e9d5ff/7e22ce?text=Grape' }, 
+            { name: 'Strawberry', imageUrl: 'https://placehold.co/400x400/fecdd3/e11d48?text=Strawberry' }, 
+            { name: 'Watermelon', imageUrl: 'https://placehold.co/400x400/bbf7d0/166534?text=Watermelon' },
+            { name: 'Pineapple', imageUrl: 'https://placehold.co/400x400/fef08a/a16207?text=Pineapple' }, 
+            { name: 'Mango', imageUrl: 'https://placehold.co/400x400/fde68a/d97706?text=Mango' }, 
+            { name: 'Cherry', imageUrl: 'https://placehold.co/400x400/fecaca/b91c1c?text=Cherry' },
+            { name: 'Peach', imageUrl: 'https://placehold.co/400x400/ffedd5/ea580c?text=Peach' },
+            // ... หากต้องการเล่น 10 ข้อ ต้องเตรียมคำศัพท์และรูปภาพให้ครบอย่างน้อย 10 ชุด เพื่อไม่ให้สุ่มซ้ำ
+            { name: 'Pear', imageUrl: 'https://placehold.co/400x400/dcfce7/15803d?text=Pear' },
+            { name: 'Kiwi', imageUrl: 'https://placehold.co/400x400/86efac/14532d?text=Kiwi' },
+            { name: 'Lemon', imageUrl: 'https://placehold.co/400x400/fef9c3/ca8a04?text=Lemon' },
+            { name: 'Coconut', imageUrl: 'https://placehold.co/400x400/e5e7eb/374151?text=Coconut' },
+            { name: 'Papaya', imageUrl: 'https://placehold.co/400x400/fed7aa/c2410c?text=Papaya' }
         ];
 
         let currentRoundQuestions = [];
         let currentQuestionIndex = 0;
         let score = 0;
-        let isProcessingAnswer = false; // ป้องกันการกดซ้ำซ้อน
+        let isProcessingAnswer = false;
+        const TOTAL_QUESTIONS = 10; // กำหนดจำนวนข้อที่นี่
 
         // ==========================================
         // 2. Audio Engine (Tone.js) Wrapper
@@ -213,14 +219,11 @@
         }
 
         function generateRound() {
-            // สุ่มคำถาม 5 ข้อ แบบไม่ซ้ำ
             const shuffled = [...fruitPool].sort(() => 0.5 - Math.random());
-            currentRoundQuestions = shuffled.slice(0, 5).map(fruit => {
-                // สร้างตัวเลือกผิด 1 ตัว
+            // ดึงคำถามตามจำนวน TOTAL_QUESTIONS
+            currentRoundQuestions = shuffled.slice(0, TOTAL_QUESTIONS).map(fruit => {
                 let wrongOpts = fruitPool.filter(f => f.name !== fruit.name);
                 let wrongChoice = wrongOpts[Math.floor(Math.random() * wrongOpts.length)];
-                
-                // สุ่มตำแหน่งซ้ายขวา
                 let options = [fruit, wrongChoice].sort(() => 0.5 - Math.random());
                 return { 
                     answer: fruit, 
@@ -234,7 +237,8 @@
 
         function renderQuestion() {
             isProcessingAnswer = false;
-            document.getElementById('text-progress').innerText = `${currentQuestionIndex + 1}/5`;
+            // อัปเดต Text ให้โชว์ /10
+            document.getElementById('text-progress').innerText = `${currentQuestionIndex + 1}/${TOTAL_QUESTIONS}`;
             document.getElementById('text-score').innerText = score;
 
             const q = currentRoundQuestions[currentQuestionIndex];
@@ -243,12 +247,12 @@
             const btnRight = document.getElementById('btn-opt-right');
 
             // Reset Styles
-            fruitEl.className = 'absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[120px] md:text-[200px] drop-shadow-[0_15px_15px_rgba(0,0,0,0.4)] anim-bounce z-10 pointer-events-none';
+            fruitEl.className = 'absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[180px] h-[180px] md:w-[280px] md:h-[280px] anim-bounce z-10 pointer-events-none drop-shadow-[0_15px_15px_rgba(0,0,0,0.4)] flex justify-center items-center bg-white/50 rounded-full border-4 border-white backdrop-blur-sm p-4';
             btnLeft.className = 'hand-interact pointer-events-auto jelly-btn bg-pink-400 text-white font-bold text-3xl md:text-5xl py-4 px-6 md:px-10 max-w-[35%] break-words z-20';
             btnRight.className = 'hand-interact pointer-events-auto jelly-btn bg-purple-400 text-white font-bold text-3xl md:text-5xl py-4 px-6 md:px-10 max-w-[35%] break-words z-20';
             
-            // Set Content
-            fruitEl.innerText = q.answer.icon;
+            // Set Content เป็นแท็ก img
+            fruitEl.innerHTML = `<img src="${q.answer.imageUrl}" alt="${q.answer.name}" class="w-full h-full object-contain pointer-events-none" />`;
             btnLeft.innerText = q.options[0].name;
             btnRight.innerText = q.options[1].name;
 
@@ -315,7 +319,7 @@
                 btn.classList.replace('bg-purple-400', 'bg-green-400');
                 SoundManager.correct();
                 spawnStars(rect.left + rect.width/2, rect.top + rect.height/2);
-                score += 10;
+                score += 10; // ได้คะแนนข้อละ 10 (เต็ม 100)
             } else {
                 btn.classList.add('anim-shake');
                 btn.classList.replace('bg-pink-400', 'bg-red-500');
@@ -327,7 +331,7 @@
 
             setTimeout(() => {
                 currentQuestionIndex++;
-                if (currentQuestionIndex < 5) {
+                if (currentQuestionIndex < TOTAL_QUESTIONS) {
                     renderQuestion();
                 } else {
                     document.getElementById('final-score').innerText = score;
@@ -367,21 +371,16 @@
         let hoverStartTime = 0;
         const HOVER_DURATION = 1200; // 1.2s hover to click
         const hoverRing = document.getElementById('hover-ring');
-        const RING_MAX_DASH = 226; // From CSS
+        const RING_MAX_DASH = 226;
 
         function processHoverLogic(cursorX, cursorY) {
-            // Find intersect with interactive elements
-            const buttons = document.querySelectorAll('.hand-interact:not(.hidden)');
-            let foundTarget = null;
-            
-            // Only check visible buttons in active container
             const activeScreen = Array.from(document.querySelectorAll('div[id^="screen-"]')).find(el => !el.classList.contains('hidden'));
+            let foundTarget = null;
             
             if (activeScreen) {
                 const activeButtons = activeScreen.querySelectorAll('.hand-interact');
                 for (let btn of activeButtons) {
                     const rect = btn.getBoundingClientRect();
-                    // บัฟเฟอร์พื้นที่นิดหน่อยเพื่อให้กดง่ายขึ้นสำหรับเด็ก
                     const padding = 20; 
                     if (cursorX >= rect.left - padding && cursorX <= rect.right + padding &&
                         cursorY >= rect.top - padding && cursorY <= rect.bottom + padding) {
@@ -400,12 +399,9 @@
                 } else {
                     const elapsed = Date.now() - hoverStartTime;
                     const progress = Math.min(elapsed / HOVER_DURATION, 1);
-                    
-                    // อัพเดตวงแหวนโหลด (ลด offset ลง)
                     hoverRing.style.strokeDashoffset = RING_MAX_DASH - (progress * RING_MAX_DASH);
 
                     if (progress >= 1) {
-                        // Trigger Click
                         foundTarget.click();
                         foundTarget.classList.remove('simulated-active');
                         hoverTarget = null;
@@ -448,11 +444,9 @@
         });
 
         hands.onResults((results) => {
-            // Draw Mirrored Background
             canvasCtx.save();
             canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
             
-            // สลับแกน X เพื่อ Mirror กล้อง
             canvasCtx.scale(-1, 1);
             canvasCtx.translate(-canvasElement.width, 0);
             
@@ -460,37 +454,29 @@
                 canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
             }
 
-            // Draw Hand Skeleton Overlay
             if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
                 const landmarks = results.multiHandLandmarks[0];
                 
-                // วาดเส้นกระดูกมือ
                 drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, {color: '#ffffff', lineWidth: 4});
                 drawLandmarks(canvasCtx, landmarks, {color: '#ec4899', lineWidth: 2, radius: 4});
                 
-                canvasCtx.restore(); // คืนค่าแกนก่อนคำนวณตำแหน่ง Cursor
+                canvasCtx.restore();
 
-                // Get Landmark 8 (Index Finger)
                 const indexFinger = landmarks[8];
-                
-                // Map to screen (ต้องสลับแกน X คืนด้วย 1 - x เพราะกล้อง Mirror)
                 const cursorX = (1 - indexFinger.x) * window.innerWidth;
                 const cursorY = indexFinger.y * window.innerHeight;
 
-                // Update Cursor position
                 arCursor.style.left = `${cursorX}px`;
                 arCursor.style.top = `${cursorY}px`;
                 arCursor.style.opacity = '1';
 
-                // Process Interaction logic
                 processHoverLogic(cursorX, cursorY);
             } else {
                 canvasCtx.restore();
                 arCursor.style.opacity = '0';
-                processHoverLogic(-1000, -1000); // รีเซ็ต Hover
+                processHoverLogic(-1000, -1000);
             }
 
-            // เมื่อกล้องโหลดสำเร็จ เปลี่ยนไปหน้า Start
             if (screens.loading.classList.contains('flex') && results.image) {
                 switchScreen('start');
             }
@@ -504,7 +490,6 @@
             height: 720
         });
         
-        // Start Camera
         camera.start().catch(err => {
             document.querySelector('#screen-loading p').innerText = "เกิดข้อผิดพลาด: ไม่สามารถเปิดกล้องได้ กรุณาตรวจสอบการอนุญาตใช้งาน (Permissions)";
             console.error("Camera Error:", err);
