@@ -109,7 +109,7 @@
                     Option 1
                 </button>
 
-                <div id="fruit-target" class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[160px] h-[160px] md:w-[320px] md:h-[320px] anim-bounce z-10 pointer-events-none drop-shadow-[0_15px_15px_rgba(0,0,0,0.4)] flex justify-center items-center bg-white/70 rounded-[40px] border-4 border-white backdrop-blur-sm p-2 md:p-4">
+                <div id="fruit-target" class="absolute left-1/2 top-2 sm:top-6 md:top-10 transform -translate-x-1/2 w-[160px] h-[160px] md:w-[320px] md:h-[320px] anim-bounce z-10 pointer-events-none drop-shadow-[0_15px_15px_rgba(0,0,0,0.4)] flex justify-center items-center bg-white/70 rounded-[40px] border-4 border-white backdrop-blur-sm p-2 md:p-4">
                     </div>
 
                 <button id="btn-opt-right" class="hand-interact pointer-events-auto jelly-btn bg-sky-400 text-white font-bold text-xl sm:text-2xl md:text-5xl py-3 px-2 sm:px-6 md:px-10 w-[40%] md:max-w-[35%] z-20 leading-tight flex items-center justify-center text-center shadow-lg">
@@ -243,12 +243,11 @@
             const btnLeft = document.getElementById('btn-opt-left');
             const btnRight = document.getElementById('btn-opt-right');
 
-            // Reset Styles
-            fruitEl.className = 'absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[160px] h-[160px] md:w-[320px] md:h-[320px] anim-bounce z-10 pointer-events-none drop-shadow-[0_15px_15px_rgba(0,0,0,0.4)] flex justify-center items-center bg-white/70 rounded-[40px] border-4 border-white backdrop-blur-sm p-2 md:p-4';
+            // Reset Styles และตั้งตำแหน่งกล่องผลไม้ให้อยู่ด้านบน
+            fruitEl.className = 'absolute left-1/2 top-2 sm:top-6 md:top-10 transform -translate-x-1/2 w-[160px] h-[160px] md:w-[320px] md:h-[320px] anim-bounce z-10 pointer-events-none drop-shadow-[0_15px_15px_rgba(0,0,0,0.4)] flex justify-center items-center bg-white/70 rounded-[40px] border-4 border-white backdrop-blur-sm p-2 md:p-4';
             btnLeft.className = 'hand-interact pointer-events-auto jelly-btn bg-pink-400 text-white font-bold text-xl sm:text-2xl md:text-5xl py-3 px-2 sm:px-6 md:px-10 w-[40%] md:max-w-[35%] z-20 leading-tight flex items-center justify-center text-center shadow-lg';
             btnRight.className = 'hand-interact pointer-events-auto jelly-btn bg-purple-400 text-white font-bold text-xl sm:text-2xl md:text-5xl py-3 px-2 sm:px-6 md:px-10 w-[40%] md:max-w-[35%] z-20 leading-tight flex items-center justify-center text-center shadow-lg';
             
-            // ใส่รูปจากไฟล์ Local พร้อมคำสั่งดักข้อผิดพลาดเผื่อหาไฟล์ไม่เจอ
             fruitEl.innerHTML = `<img src="${q.answer.imageUrl}" alt="${q.answer.name}" class="w-full h-full object-contain rounded-[25px] pointer-events-none" onerror="this.src='https://placehold.co/400x400/ffcccc/dc2626?text=Image+Missing'"/>`;
             btnLeft.innerText = q.options[0].name;
             btnRight.innerText = q.options[1].name;
@@ -364,7 +363,7 @@
 
         let hoverTarget = null;
         let hoverStartTime = 0;
-        const HOVER_DURATION = 1200; // 1.2 วินาทีชี้ค้างเพื่อคลิกอัตโนมัติ
+        const HOVER_DURATION = 1200;
         const hoverRing = document.getElementById('hover-ring');
         const RING_MAX_DASH = 226;
 
